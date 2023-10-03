@@ -11,6 +11,8 @@ Instruction get_instruction(const string& line)
 
 	while (getline(stream, token, ' '))
 	{
+		if (token.empty())
+			continue;
 		if (token.front() == ';')
 			break;
 		if (token.back() == ':')
