@@ -3,6 +3,8 @@
 
 using namespace std;
 
+string uppercase(const string& s);
+
 Instruction get_instruction(const string& line)
 {
 	Instruction instruction;
@@ -18,15 +20,26 @@ Instruction get_instruction(const string& line)
 		if (token.back() == ':')
 		{
 			token.pop_back();
-			instruction.label = token;
+			instruction.label = uppercase(token);
 			continue;
 		}
 		if (instruction.operation.empty())
 		{
-			instruction.operation = token;
+			instruction.operation = uppercase(token);
 			continue;
 		}
-		instruction.operands.push_back(token);
+		instruction.operands.push_back(uppercase(token));
 	}
 	return instruction;
+}
+
+string uppercase(const string& s)
+{
+	string newString;
+
+	for (char c : s)
+	{
+		newString.push_back((char)toupper(c));
+	}
+	return newString;
 }
