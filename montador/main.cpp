@@ -9,6 +9,10 @@ typedef map<string, pair<int, int>> InstructionTable;
 typedef map<string, int> DirectiveTable;
 typedef map<string, int> SymbolTable;
 
+/*
+ * Software Básico (2023.2) - Trabalho 1
+ * Henrique Rodrigues Rocha: 211036061
+ */
 int main(int argc, char* argv[])
 {
 	InstructionTable instructionTable{
