@@ -1,72 +1,144 @@
-#include "first_pass.h"
-#include "instruction.h"
-#include "directive.h"
 #include <iostream>
+#include <map>
 #include <regex>
+#include "first_pass.h"
+#include "AssemblyLine.h"
 
-using namespace std;
-
-void first_pass(
-	const vector<string>& lines,
-	const map<string, pair<int, int>>& instructionTable,
-	const map<string, int>& directiveTable,
-	map<string, int>& symbolTable
-)
+void first_pass(const std::vector<std::string>& lines,
+	SymbolTable& symbolTable,
+	InstructionTable instructionTable)
 {
-	int locationCounter = 0, lineCounter = 1;
-	regex labelRegex(R"([A-Za-z_][A-Za-z0-9_]{0,29})");
+	std::map<std::string, int> textSection, dataSection;
+	std::string currentSection;
+	std::regex labelRegex(R"([A-Z_][A-Z0-9_]{0,29})"), spaceRegex(R"([0-9]+)"),
+		constRegex(R"(\-?[0-9]+)");
+	int locationCounter = 0, lineCounter = 1, textAddress = 0, dataAddress = 0;
 
-	for (const auto& line : lines)
+	for (const auto& l : lines)
 	{
-		auto instruction = get_instruction(line);
+		AssemblyLine line(l);
 
-		if (!instruction.label.empty())
+		if (!line.getLabel().empty())
 		{
-			const auto& label = instruction.label;
+			auto label = line.getLabel();
 
-			if (!regex_match(label, labelRegex))
+			if (regex_match(label, labelRegex))
 			{
-				cerr << "ERRO LEXICO" << endl;
-				lineCounter++;
-
-				continue;
+				if (currentSection == "TEXT")
+				{
+					textSection[label] = locationCounter;
+				}
+				else if (currentSection == "DATA")
+				{
+					dataSection[label] = locationCounter;
+				}
 			}
-			if (symbolTable.count(label))
+			else
 			{
-				cerr << "ERRO SEMANTICO" << endl;
-				lineCounter++;
-
-				continue;
+				std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
 			}
-			symbolTable[label] = locationCounter;
 		}
-		if (instruction.operation.empty())
+		if (!line.getOperation().empty())
 		{
-			lineCounter++;
-			continue;
-		}
-		const auto& operation = instruction.operation;
+			auto operation = line.getOperation();
 
-		if (instructionTable.count(operation))
+			if (instructionTable.find(operation))
+			{
+				int size = instructionTable.getSize(operation);
+				locationCounter += size;
+			}
+			else if (operation == "SECAO")
+			{
+				if (line.getSize() == 2)
+				{
+					auto section = line.getOperand(0);
+
+					if (section == "TEXT")
+					{
+						currentSection = section;
+						locationCounter = textAddress;
+					}
+					else if (section == "DATA")
+					{
+						currentSection = section;
+						locationCounter = dataAddress;
+					}
+					else
+					{
+						std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+					}
+				}
+				else
+				{
+					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+				}
+			}
+			else if (operation == "SPACE")
+			{
+				if (line.getSize() == 2)
+				{
+					if (regex_match(line.getOperand(0), spaceRegex))
+					{
+						int size = std::stoi(line.getOperand(0));
+						locationCounter += size;
+					}
+					else
+					{
+						std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
+					}
+				}
+				else if (line.getSize() == 1)
+				{
+					locationCounter++;
+				}
+				else
+				{
+					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+				}
+			}
+			else if (operation == "CONST")
+			{
+				if (line.getSize() == 2)
+				{
+					if (regex_match(line.getOperand(0), constRegex))
+					{
+						locationCounter++;
+					}
+					else
+					{
+						std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
+					}
+				}
+				else
+				{
+					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+				}
+			}
+			else
+			{
+				std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+			}
+		}
+		if (currentSection == "TEXT")
 		{
-			int length = instructionTable.at(operation).second;
-
-			locationCounter += length;
-			lineCounter++;
-
-			continue;
+			textAddress = locationCounter;
 		}
-		if (directiveTable.count(operation))
+		else if (currentSection == "DATA")
 		{
-			int directive = directiveTable.at(operation);
-			int length = run_directive(directive, instruction);
-
-			locationCounter += length;
-			lineCounter++;
-
-			continue;
+			dataAddress = locationCounter;
 		}
-		cerr << "ERRO SINTATICO" << endl;
+		else if (!line.getLabel().empty() || !line.getOperation().empty())
+		{
+			std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l << std::endl;
+		}
 		lineCounter++;
+	}
+	for (const auto& entry : textSection)
+	{
+		symbolTable.add(entry.first, entry.second);
+	}
+	for (const auto& entry : dataSection)
+	{
+		symbolTable.add(entry.first, entry.second + textAddress);
 	}
 }
