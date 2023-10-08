@@ -24,13 +24,32 @@ void first_pass(const std::vector<std::string>& lines,
 
 			if (regex_match(label, labelRegex))
 			{
-				if (currentSection == "TEXT")
+				if (!symbolTable.find(label))
 				{
-					textSection[label] = locationCounter;
-				}
-				else if (currentSection == "DATA")
-				{
-					dataSection[label] = locationCounter;
+					if (currentSection == "TEXT")
+					{
+						if (!textSection.count(label))
+						{
+							textSection[label] = locationCounter;
+						}
+						else
+						{
+							std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l
+									  << std::endl;
+						}
+					}
+					else if (currentSection == "DATA")
+					{
+						if (!dataSection.count(label))
+						{
+							dataSection[label] = locationCounter;
+						}
+						else
+						{
+							std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l
+									  << std::endl;
+						}
+					}
 				}
 			}
 			else

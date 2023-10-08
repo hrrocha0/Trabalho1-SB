@@ -30,6 +30,7 @@ AssemblyLine::AssemblyLine(const std::string& line)
 {
 	std::istringstream stream(replace_tabs_with_spaces(line));
 	std::string token;
+	int wordCounter = 0;
 
 	while (std::getline(stream, token, ' '))
 	{
@@ -37,7 +38,7 @@ AssemblyLine::AssemblyLine(const std::string& line)
 			continue;
 		if (token.front() == ';')
 			break;
-		if (token.back() == ':')
+		if (token.back() == ':' && wordCounter == 0)
 		{
 			token.pop_back();
 			this->label = uppercase(token);
@@ -50,6 +51,7 @@ AssemblyLine::AssemblyLine(const std::string& line)
 		{
 			this->operands.push_back(uppercase(token));
 		}
+		wordCounter++;
 	}
 }
 
