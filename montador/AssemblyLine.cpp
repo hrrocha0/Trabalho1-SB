@@ -49,7 +49,15 @@ AssemblyLine::AssemblyLine(const std::string& line)
 		}
 		else
 		{
-			this->operands.push_back(uppercase(token));
+			std::istringstream stream1(token);
+			std::string operand;
+
+			while (std::getline(stream1, operand, ','))
+			{
+				this->operands.push_back(uppercase(operand));
+				wordCounter++;
+			}
+			continue;
 		}
 		wordCounter++;
 	}

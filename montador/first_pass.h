@@ -6,7 +6,7 @@
 #ifndef TRABALHO1_SB_MONTADOR_FIRST_PASS_H_
 #define TRABALHO1_SB_MONTADOR_FIRST_PASS_H_
 
-void first_pass(
+bool first_pass(
 	const std::vector<std::string>& lines,
 	SymbolTable& symbolTable,
 	InstructionTable instructionTable

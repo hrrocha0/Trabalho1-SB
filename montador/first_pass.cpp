@@ -1,18 +1,21 @@
-#include <iostream>
 #include <map>
 #include <regex>
+#include "error.h"
 #include "first_pass.h"
 #include "AssemblyLine.h"
 
-void first_pass(const std::vector<std::string>& lines,
+bool first_pass(const std::vector<std::string>& lines,
 	SymbolTable& symbolTable,
 	InstructionTable instructionTable)
 {
 	std::map<std::string, int> textSection, dataSection;
 	std::string currentSection;
-	std::regex labelRegex(R"([A-Z_][A-Z0-9_]{0,29})"), spaceRegex(R"([0-9]+)"),
-		constRegex(R"(\-?[0-9]+)");
+
+	std::regex labelRegex(R"([A-Z_][A-Z0-9_]{0,29})");
+	std::regex spaceRegex(R"([0-9]+)");
+
 	int locationCounter = 0, lineCounter = 1, textAddress = 0, dataAddress = 0;
+	bool generateFile = true;
 
 	for (const auto& l : lines)
 	{
@@ -24,37 +27,35 @@ void first_pass(const std::vector<std::string>& lines,
 
 			if (regex_match(label, labelRegex))
 			{
-				if (!symbolTable.find(label))
+				if (currentSection == "TEXT")
 				{
-					if (currentSection == "TEXT")
+					if (!textSection.count(label))
 					{
-						if (!textSection.count(label))
-						{
-							textSection[label] = locationCounter;
-						}
-						else
-						{
-							std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l
-									  << std::endl;
-						}
+						textSection[label] = locationCounter;
 					}
-					else if (currentSection == "DATA")
+					else
 					{
-						if (!dataSection.count(label))
-						{
-							dataSection[label] = locationCounter;
-						}
-						else
-						{
-							std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l
-									  << std::endl;
-						}
+						semanticalError(l, lineCounter);
+						generateFile = false;
+					}
+				}
+				else if (currentSection == "DATA")
+				{
+					if (!dataSection.count(label))
+					{
+						dataSection[label] = locationCounter;
+					}
+					else
+					{
+						semanticalError(l, lineCounter);
+						generateFile = false;
 					}
 				}
 			}
 			else
 			{
-				std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
+				lexicalError(l, lineCounter);
+				generateFile = false;
 			}
 		}
 		if (!line.getOperation().empty())
@@ -63,8 +64,7 @@ void first_pass(const std::vector<std::string>& lines,
 
 			if (instructionTable.find(operation))
 			{
-				int size = instructionTable.getSize(operation);
-				locationCounter += size;
+				locationCounter += instructionTable.getSize(operation);
 			}
 			else if (operation == "SECAO")
 			{
@@ -84,12 +84,14 @@ void first_pass(const std::vector<std::string>& lines,
 					}
 					else
 					{
-						std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+						syntaticalError(l, lineCounter);
+						generateFile = false;
 					}
 				}
 				else
 				{
-					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+					syntaticalError(l, lineCounter);
+					generateFile = false;
 				}
 			}
 			else if (operation == "SPACE")
@@ -98,12 +100,12 @@ void first_pass(const std::vector<std::string>& lines,
 				{
 					if (regex_match(line.getOperand(0), spaceRegex))
 					{
-						int size = std::stoi(line.getOperand(0));
-						locationCounter += size;
+						locationCounter += std::stoi(line.getOperand(0));
 					}
 					else
 					{
-						std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
+						lexicalError(l, lineCounter);
+						generateFile = false;
 					}
 				}
 				else if (line.getSize() == 1)
@@ -112,43 +114,32 @@ void first_pass(const std::vector<std::string>& lines,
 				}
 				else
 				{
-					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+					syntaticalError(l, lineCounter);
+					generateFile = false;
 				}
 			}
 			else if (operation == "CONST")
 			{
-				if (line.getSize() == 2)
-				{
-					if (regex_match(line.getOperand(0), constRegex))
-					{
-						locationCounter++;
-					}
-					else
-					{
-						std::cerr << "ERRO LEXICO:\t\t" << lineCounter << ". " << l << std::endl;
-					}
-				}
-				else
-				{
-					std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
-				}
+				locationCounter++;
 			}
 			else
 			{
-				std::cerr << "ERRO SINTATICO:\t\t" << lineCounter << ". " << l << std::endl;
+				syntaticalError(l, lineCounter);
+				generateFile = false;
 			}
-		}
-		if (currentSection == "TEXT")
-		{
-			textAddress = locationCounter;
-		}
-		else if (currentSection == "DATA")
-		{
-			dataAddress = locationCounter;
-		}
-		else if (!line.getLabel().empty() || !line.getOperation().empty())
-		{
-			std::cerr << "ERRO SEMANTICO:\t\t" << lineCounter << ". " << l << std::endl;
+			if (currentSection == "TEXT")
+			{
+				textAddress = locationCounter;
+			}
+			else if (currentSection == "DATA")
+			{
+				dataAddress = locationCounter;
+			}
+			else if (!line.getLabel().empty() || !line.getOperation().empty())
+			{
+				semanticalError(l, lineCounter);
+				generateFile = false;
+			}
 		}
 		lineCounter++;
 	}
@@ -160,4 +151,5 @@ void first_pass(const std::vector<std::string>& lines,
 	{
 		symbolTable.add(entry.first, entry.second + textAddress);
 	}
+	return generateFile;
 }

@@ -1,8 +1,10 @@
 #include <iostream>
+#include <vector>
 #include "SymbolTable.h"
 #include "InstructionTable.h"
 #include "file.h"
 #include "first_pass.h"
+#include "second_pass.h"
 
 /*
  * Software Básico (2023.2) - Trabalho 1
@@ -10,8 +12,11 @@
  */
 int main(int argc, char* argv[])
 {
-	std::string path;
+	std::string path, filename;
 	std::vector<std::string> lines;
+	std::vector<int> objectCode;
+
+	bool generateFile = true;
 
 	SymbolTable symbolTable;
 	InstructionTable instructionTable;
@@ -37,9 +42,16 @@ int main(int argc, char* argv[])
 		abort();
 	}
 	path = argv[1];
+	filename = get_filename(path);
 	lines = read_file(path);
 
-	first_pass(lines, symbolTable, instructionTable);
+	generateFile &= first_pass(lines, symbolTable, instructionTable);
+	generateFile &= second_pass(lines, objectCode, symbolTable, instructionTable);
 
+	if (generateFile)
+	{
+		std::cout << "GENERATE FILE" << std::endl;
+		write_file(filename, objectCode);
+	}
 	return 0;
 }
