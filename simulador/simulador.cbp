@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters='&quot;C:\Users\vinic\Desktop\Nova_pasta\Trabalho1-SB\simulador\para_teste_do_simulador.obj&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -32,7 +33,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Unit filename="simulador.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
