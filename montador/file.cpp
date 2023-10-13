@@ -40,10 +40,10 @@ std::vector<std::string> read_file(const std::string& path)
 	return lines;
 }
 
-void write_file(const std::string& fileName, const std::vector<int>& objectCode)
+void write_file(const std::string& filename, const std::vector<int>& objectCode)
 {
 	std::string line;
-	std::ofstream file(fileName + ".obj");
+	std::ofstream file(filename + ".obj");
 
 	if (file.fail())
 	{

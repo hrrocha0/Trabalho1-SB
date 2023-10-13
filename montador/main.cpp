@@ -9,6 +9,7 @@
 /*
  * Software Básico (2023.2) - Trabalho 1
  * Henrique Rodrigues Rocha: 211036061
+ * Vinícius de Sousa Brito: 211042748
  */
 int main(int argc, char* argv[])
 {
@@ -50,7 +51,6 @@ int main(int argc, char* argv[])
 
 	if (generateFile)
 	{
-		std::cout << "GENERATE FILE" << std::endl;
 		write_file(filename, objectCode);
 	}
 	return 0;
