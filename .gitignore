@@ -2,4 +2,8 @@
 /cmake-build-debug/
 /cmake-build-release/
 /**/Debug/
+/montador/*.asm
+/montador/*.mcr
+/montador/*.obj
+/montador/montador.depend
 CMakeLists.txt

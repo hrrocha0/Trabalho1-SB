@@ -32,7 +32,21 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="AssemblyLine.cpp" />
+		<Unit filename="AssemblyLine.h" />
+		<Unit filename="InstructionTable.cpp" />
+		<Unit filename="InstructionTable.h" />
+		<Unit filename="SymbolTable.cpp" />
+		<Unit filename="SymbolTable.h" />
+		<Unit filename="error.cpp" />
+		<Unit filename="error.h" />
+		<Unit filename="file.cpp" />
+		<Unit filename="file.h" />
+		<Unit filename="first_pass.cpp" />
+		<Unit filename="first_pass.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="second_pass.cpp" />
+		<Unit filename="second_pass.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
