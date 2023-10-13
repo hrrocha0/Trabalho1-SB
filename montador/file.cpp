@@ -5,18 +5,15 @@
 std::string get_filename(const std::string& path)
 {
 	std::string filename;
+	std::size_t dotIndex = path.find('.');
 
-	auto dotIndex = path.find('.');
-
-	if (dotIndex != std::string::npos)
-	{
-		filename = path.substr(0, dotIndex);
-	}
-	else
+	if (dotIndex == std::string::npos)
 	{
 		std::cerr << "CAMINHO INVALIDO" << std::endl;
 		abort();
 	}
+	filename = path.substr(0, dotIndex);
+
 	return filename;
 }
 
@@ -42,8 +39,8 @@ std::vector<std::string> read_file(const std::string& path)
 
 void write_file(const std::string& filename, const std::vector<int>& objectCode)
 {
-	std::string line;
 	std::ofstream file(filename + ".obj");
+	std::string line;
 
 	if (file.fail())
 	{
