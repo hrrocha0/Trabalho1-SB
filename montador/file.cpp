@@ -5,18 +5,15 @@
 std::string get_filename(const std::string& path)
 {
 	std::string filename;
+	std::size_t dotIndex = path.find('.');
 
-	auto dotIndex = path.find('.');
-
-	if (dotIndex != std::string::npos)
-	{
-		filename = path.substr(0, dotIndex);
-	}
-	else
+	if (dotIndex == std::string::npos)
 	{
 		std::cerr << "CAMINHO INVALIDO" << std::endl;
 		abort();
 	}
+	filename = path.substr(0, dotIndex);
+
 	return filename;
 }
 
@@ -40,10 +37,10 @@ std::vector<std::string> read_file(const std::string& path)
 	return lines;
 }
 
-void write_object_file(const std::string& fileName, const std::vector<int>& objectCode)
+void write_object_file(const std::string& filename, const std::vector<int>& objectCode)
 {
+	std::ofstream file(filename + ".obj");
 	std::string line;
-	std::ofstream file(fileName + ".obj");
 
 	if (file.fail())
 	{
@@ -57,13 +54,13 @@ void write_object_file(const std::string& fileName, const std::vector<int>& obje
 	file.close();
 }
 
-void write_pre_processed_file(const std::string& fileName, const std::vector<std::string>& preProcessedCode)
+void write_pre_processed_file(const std::string& filename, const std::vector<std::string>& preProcessedCode)
 {
-    std::ofstream file(fileName + ".pre");
+    std::ofstream file(filename + ".pre");
 
     if (!file.is_open())
     {
-        std::cerr << "NÃO FOI POSSÍVEL CRIAR O ARQUIVO PRÉ-PROCESSADO (SEM AS MACROS)" << std::endl;
+        std::cerr << "NAO FOI POSSIVEL CRIAR O ARQUIVO PRE-PROCESSADO (SEM AS MACROS)" << std::endl;
         abort();
     }
 

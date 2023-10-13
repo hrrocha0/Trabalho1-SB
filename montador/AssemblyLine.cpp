@@ -28,11 +28,11 @@ std::string replace_tabs_with_spaces(const std::string& s)
 
 AssemblyLine::AssemblyLine(const std::string& line)
 {
-	std::istringstream stream(replace_tabs_with_spaces(line));
+	std::istringstream lineStream(replace_tabs_with_spaces(line));
 	std::string token;
 	int wordCounter = 0;
 
-	while (std::getline(stream, token, ' '))
+	while (std::getline(lineStream, token, ' '))
 	{
 		if (token.empty())
 			continue;
@@ -49,10 +49,10 @@ AssemblyLine::AssemblyLine(const std::string& line)
 		}
 		else
 		{
-			std::istringstream stream1(token);
+			std::istringstream tokenStream(token);
 			std::string operand;
 
-			while (std::getline(stream1, operand, ','))
+			while (std::getline(tokenStream, operand, ','))
 			{
 				this->operands.push_back(uppercase(operand));
 				wordCounter++;

@@ -69,13 +69,13 @@ int main(int argc, char* argv[])
 
 	if (generatePreProcessedFile)
 	{
-		std::cout << "GENERATE .pre FILE" << std::endl;
+		std::cout << "ARQUIVO .pre GERADO" << std::endl;
 		write_pre_processed_file(filename, preProcessedCode);
 	}
 
 	if (generateFile)
 	{
-		std::cout << "GENERATE .obj FILE" << std::endl;
+		std::cout << "ARQUIVO .obj GERADO" << std::endl;
 		write_object_file(filename, objectCode);
 	}
 	return 0;
