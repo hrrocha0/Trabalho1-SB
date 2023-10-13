@@ -40,7 +40,7 @@ std::vector<std::string> read_file(const std::string& path)
 	return lines;
 }
 
-void write_file(const std::string& fileName, const std::vector<int>& objectCode)
+void write_object_file(const std::string& fileName, const std::vector<int>& objectCode)
 {
 	std::string line;
 	std::ofstream file(fileName + ".obj");
@@ -55,4 +55,22 @@ void write_file(const std::string& fileName, const std::vector<int>& objectCode)
 		file << value << ' ';
 	}
 	file.close();
+}
+
+void write_pre_processed_file(const std::string& fileName, const std::vector<std::string>& preProcessedCode)
+{
+    std::ofstream file(fileName + ".pre");
+
+    if (!file.is_open())
+    {
+        std::cerr << "NÃO FOI POSSÍVEL CRIAR O ARQUIVO PRÉ-PROCESSADO (SEM AS MACROS)" << std::endl;
+        abort();
+    }
+
+    for (const std::string& value : preProcessedCode)
+    {
+        file << value << "\n";
+    }
+
+    file.close();
 }

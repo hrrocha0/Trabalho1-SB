@@ -1,21 +1,32 @@
 #include <iostream>
 #include <vector>
+#include <map>
+#include <string>
+#include <fstream>
+#include <sstream>
 #include "SymbolTable.h"
 #include "InstructionTable.h"
 #include "file.h"
+#include "macroProcessor.h"
 #include "first_pass.h"
 #include "second_pass.h"
+
+using namespace std;
 
 /*
  * Software Básico (2023.2) - Trabalho 1
  * Henrique Rodrigues Rocha: 211036061
+ * Vinícius de Sousa Brito: 211042748
  */
+
 int main(int argc, char* argv[])
 {
 	std::string path, filename;
 	std::vector<std::string> lines;
+	std::vector<std::string> preProcessedCode;
 	std::vector<int> objectCode;
 
+	bool generatePreProcessedFile = true;
 	bool generateFile = true;
 
 	SymbolTable symbolTable;
@@ -45,13 +56,27 @@ int main(int argc, char* argv[])
 	filename = get_filename(path);
 	lines = read_file(path);
 
+    if (path.size() > 4 && path.substr(path.size() - 4) == ".mcr")
+    {
+        generatePreProcessedFile &= process_macros(lines);
+        preProcessedCode = lines;
+    } else {
+        generatePreProcessedFile = false;
+    }
+
 	generateFile &= first_pass(lines, symbolTable, instructionTable);
 	generateFile &= second_pass(lines, objectCode, symbolTable, instructionTable);
 
+	if (generatePreProcessedFile)
+	{
+		std::cout << "GENERATE .pre FILE" << std::endl;
+		write_pre_processed_file(filename, preProcessedCode);
+	}
+
 	if (generateFile)
 	{
-		std::cout << "GENERATE FILE" << std::endl;
-		write_file(filename, objectCode);
+		std::cout << "GENERATE .obj FILE" << std::endl;
+		write_object_file(filename, objectCode);
 	}
 	return 0;
 }
