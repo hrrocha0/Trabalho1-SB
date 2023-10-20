@@ -35,45 +35,54 @@ bool second_pass(
 				{
 					textSection.push_back(opcode);
 
-					for (const auto& operand : line.getOperands())
+					if (line.getSize() == instructionTable.getSize(operation))
 					{
-						if (regex_match(operand, addressRegex))
+						for (const auto& operand : line.getOperands())
 						{
-							std::string label;
-							int offset;
-							auto plusIndex = operand.find('+');
+							if (regex_match(operand, addressRegex))
+							{
+								std::string label;
+								int offset;
+								auto plusIndex = operand.find('+');
 
-							if (plusIndex != std::string::npos)
-							{
-								label = operand.substr(0, plusIndex);
-								offset = stoi(operand.substr(plusIndex + 1));
+								if (plusIndex != std::string::npos)
+								{
+									label = operand.substr(0, plusIndex);
+									offset = stoi(operand.substr(plusIndex + 1));
+								}
+								else
+								{
+									label = operand;
+									offset = 0;
+								}
+								if (symbolTable.find(label))
+								{
+									textSection.push_back(symbolTable.getAddress(label) + offset);
+								}
+								else
+								{
+									semanticalError(l, lineCounter);
+									generateFile = false;
+									lineCounter++;
+
+									break;
+								}
 							}
 							else
 							{
-								label = operand;
-								offset = 0;
-							}
-							if (symbolTable.find(label))
-							{
-								textSection.push_back(symbolTable.getAddress(label) + offset);
-							}
-							else
-							{
-								semanticalError(l, lineCounter);
+								lexicalError(l, lineCounter);
 								generateFile = false;
 								lineCounter++;
 
 								break;
 							}
 						}
-						else
-						{
-							lexicalError(l, lineCounter);
-							generateFile = false;
-							lineCounter++;
-
-							break;
-						}
+					}
+					else
+					{
+						syntaticalError(l, lineCounter);
+						generateFile = false;
+						lineCounter++;
 					}
 				}
 				else if (currentSection == "DATA")

@@ -1,9 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <map>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include "SymbolTable.h"
 #include "InstructionTable.h"
 #include "file.h"

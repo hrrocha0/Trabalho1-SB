@@ -1,0 +1,23 @@
+; Calcula o mdc entre dois números.
+; 12 31 12 32 10 31 4 32 3 32 11 33 10 31 2 33 11 33 8 28 9 32 31 9 33 32 5 4 13 32 14 0 0 0
+SECAO	TEXT
+		INPUT	X		; 0
+		INPUT	Y		; 2
+LOOP:	LOAD	X		; 4
+		DIV		Y		; 6
+		MUL		Y		; 8
+		STORE	AUX		; 10
+		LOAD	X		; 12
+		SUB		AUX		; 14
+		STORE	AUX		; 16
+		JMPZ	BREAK	; 18
+		COPY	Y,X		; 20
+		COPY	AUX,Y	; 23
+		JMP		LOOP	; 26
+BREAK:	OUTPUT	Y		; 28
+		STOP			; 30
+
+SECAO	DATA
+X:		SPACE			; 31
+Y:		SPACE			; 32
+AUX:	SPACE			; 33
