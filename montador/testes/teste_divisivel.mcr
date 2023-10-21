@@ -1,26 +1,34 @@
 ; Verifica se um número é divisível pelo outro.
-; 12 25 12 26 10 25 4 26 3 26 11 26 10 25 2 26 8 22 13 27 5 24 13 28 14 0 0 0 1
-JMPDIV:	MACRO	&A, &B, &C
-		LOAD	&A				; +0
-		DIV		&B				; +2
-		MUL		&B				; +4
-		STORE	&B				; +6
-		LOAD	&A				; +8
-		SUB		&B				; +10
-		JMPZ	&C				; +12
+; 12 28 12 29 10 28 4 29 3 29 11 29 10 28 2 29 11 29 10 29 8 25 13 30 14 13 31 14 0 0 0 1
+MOD:	MACRO	&A, &B, &C
+		LOAD	&A					; +0
+		DIV		&B					; +2
+		MUL		&B					; +4
+		STORE	&C					; +6
+		LOAD	&A					; +8
+		SUB		&C					; +10
+		STORE	&C					; +12
 ENDMACRO
 
-SECAO	DATA
-X:		SPACE					; 25
-Y:		SPACE					; 26
-ZERO:	CONST	0				; 27
-ONE:	CONST	1				; 28
+JMPDIV:	MACRO	&A, &B, &C
+		MOD		&A	&B	&B			; +0
+		LOAD	&B					; +14
+		JMPZ	&C					; +16
+ENDMACRO
 
 SECAO	TEXT
-		INPUT	X				; 0
-		INPUT	Y				; 2
-		JMPDIV	X	Y	TRUE	; 4
-		OUTPUT	ZERO			; 18
-		JMP		EXIT			; 20
-TRUE:	OUTPUT	ONE				; 22
-EXIT:	STOP					; 24
+MAIN:	INPUT	M					; 0
+		INPUT	N					; 2
+		JMPDIV	M	N	DIVISIVEL	; 4
+		OUTPUT	ZERO				; 22
+		STOP						; 24
+
+DIVISIVEL:
+		OUTPUT	UM					; 25
+		STOP						; 27
+
+SECAO	DATA
+M:		SPACE						; 28
+N:		SPACE						; 29
+ZERO:	CONST	0					; 30
+UM:		CONST	1					; 31

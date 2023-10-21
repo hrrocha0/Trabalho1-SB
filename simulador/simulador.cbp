@@ -11,7 +11,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='&quot;C:\Users\vinic\Desktop\Nova_pasta\Trabalho1-SB\simulador\para_teste_do_simulador.obj&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -34,6 +33,42 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="simulador.cpp" />
+		<Unit filename="testes/para_teste_do_simulador.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_divisivel.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_6.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_fatorial.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_fib.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_mdc.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_media.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_ortogonal.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_par.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_pow.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_sort.obj">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_sqrt.obj">
+			<Option target="Debug" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

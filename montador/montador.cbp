@@ -36,18 +36,58 @@
 		<Unit filename="AssemblyLine.h" />
 		<Unit filename="InstructionTable.cpp" />
 		<Unit filename="InstructionTable.h" />
+		<Unit filename="Macro.cpp" />
+		<Unit filename="Macro.h" />
+		<Unit filename="MacroTable.cpp" />
+		<Unit filename="MacroTable.h" />
 		<Unit filename="SymbolTable.cpp" />
 		<Unit filename="SymbolTable.h" />
-		<Unit filename="error.cpp" />
-		<Unit filename="error.h" />
-		<Unit filename="file.cpp" />
-		<Unit filename="file.h" />
-		<Unit filename="first_pass.cpp" />
-		<Unit filename="first_pass.h" />
-		<Unit filename="macroProcessor.cpp" />
-		<Unit filename="main.cpp" />
-		<Unit filename="second_pass.cpp" />
-		<Unit filename="second_pass.h" />
+		<Unit filename="montador.cpp" />
+		<Unit filename="testes/teste_divisivel.mcr">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_1.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_2.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_3.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_4.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_5.mcr">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_erro_6.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_fatorial.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_fib.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_mdc.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_media.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_ortogonal.mcr">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_par.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_pow.asm">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="testes/teste_sqrt.asm">
+			<Option target="Debug" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

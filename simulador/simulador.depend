@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1698005326 source:d:\admin\documents\meus programas\unb\trabalho1-sb\simulador\simulador.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<map>
+	<limits>
+
