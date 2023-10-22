@@ -2,13 +2,14 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <limits> // Para usar numeric_limits
 
 using namespace std;
 
 // Variável global para representar a memória
 vector<int> memory;
 
-int dataStart = -1;
+int dataStart = numeric_limits<int>::max();
 
 map<int, pair<string, int>> instructionDictionary = {
     {1, {"ADD", 2}},
@@ -99,18 +100,37 @@ void loadInstructionsFromFile(const string &filename) {
     ifstream inputFile(filename);
 
     int opcode;
-    bool dataSection = false;
+    int pc = 0; // Contador do Program Counter
 
     while (inputFile >> opcode) {
-        if (opcode == 14) { // Verificar se a instrução é STOP (14)
-            dataStart = memory.size() + 1; // Início da seção de dados
+        memory.push_back(opcode);
+        pc++;
+
+        bool isJump = opcode >= 5 && opcode <= 8;
+        int numOperands = instructionDictionary[opcode].second - 1;
+
+        for (int i = 0; i < numOperands; ++i) {
+            int operand;
+            inputFile >> operand;
+            pc++;
+            memory.push_back(operand);
+
+            // Atualiza o início da seção de dados se o operando for menor
+            if (operand < dataStart && !isJump) {
+                dataStart = operand;
+            }
         }
 
-        memory.push_back(opcode);
+        if (pc >= dataStart - 1) {
+            while (inputFile >> opcode) {
+                memory.push_back(opcode); // Continua lendo e armazenando na memória (seção de dados)
+            }
+        }
     }
 
     inputFile.close();
 }
+
 
 void printDataMemory(const vector<int> &memory, int dataStart) {
     cout << "Secao de dados da memoria:" << endl;
