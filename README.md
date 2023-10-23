@@ -7,5 +7,5 @@
 Aqui constam informações a respeito do desenvolvimento do trabalho:
 
 - O código foi compilado utilizando o compilador padrão **GNU GCC Compiler** da versão **20.03** da IDE **Code::Blocks**, sem nenhuma configuração adicional.
-- As compilações tanto do **montador** quanto do **simulador** foram realizadas na mesma máquina.
+- As compilações tanto do **montador** quanto do **simulador** foram realizadas na mesma máquina, com **Windows 10**.
 - Os arquivos executáveis podem ser encontrados nas pastas */bin/Release* respectivas ao **montador** e ao **simulador**.
